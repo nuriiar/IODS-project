@@ -10,4 +10,6 @@ date()
 
 ```
 The text continues here.
-
+# The beginning was hectic, with a lot of information in different places of moodle, excercise and the book. I expect to at least learn how to navigate between github and desctop application for R or python, to be able to pull some freely available data.
+# also this excercise set 1 is confusing and very long. Most of the course participants are PhD students, who has got so much time for a single course? I have been doing some python courses before, and for me, just looking at some code chunks is not so useful, there is not much explanation of the syntax, what is %>% ? what is < - ? and so on. To learn to code, looking at codes does not help, you need to try and write one all the time.
+#  https://nuriiar.github.io/IODS-project/
