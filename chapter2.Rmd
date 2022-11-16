@@ -27,6 +27,11 @@ dim(lrn_csv)
 
 #*I Chose the variables for analysis: gender, age, attitude, and surf. The idea is to test how the emotions-related variables are associated with points students received at statistics exam, controlling for gender and age. Firstly, we explore the variables by summarising them, first, the variable points by gender with minimum max, average and standard deviation and then age, attitude, surf*
 
+#summarise relations
+p <- ggpairs(learning2014, mapping = aes(col = gender), 
+                     lower = list(combo = wrap("facethist", bins = 20))) + theme_bw()
+p
+
 lrn_csv %>% 
   group_by(gender) %>% 
     summarise(min(points), max(points), mean(points), sd(points))
@@ -80,6 +85,10 @@ summary(model2)
 
 model3 <- lm(points ~ attitude + surf + gender + age, data = lrn_csv)
 summary(model3)
+
+## plotting the linear model with a line, checking model fit
+qplot(attitude, points, data = lrn_csv) + geom_smooth(method = "lm")
+plot(linear_attitude, which = c(1,2,5))
 
 #*Looking at the outputs of three models, it is clear that attitude variable has the most explanatory power as the firt model ezxplains 19.8% of the variance in the outcome variable, and the introduction of the othe three variables increases the value of r squared only marginally. Attitude is the only variable associated with the exam points, so that the more positive the attitude towards statistics in general, the higher would be the exam scores, partly supporting the hypothesis. Association of surf variable with an outcome is not statistically significant, that goes against the hypothesis.*  
 

@@ -364,7 +364,7 @@ writing and reading R code as well as statistical methods.</li>
 advanced methods you are using.</li>
 </ul>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Tue Nov 15 09:02:10 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Wed Nov 16 13:11:29 2022&quot;</code></pre>
 <p>Here we go again…</p>
 <p>#<em>opening relevant libraries</em></p>
 <p>library(tidyverse) library(readr) library(dplyr) library(ggplot2)</p>
@@ -380,6 +380,9 @@ associated with points students received at statistics exam, controlling
 for gender and age. Firstly, we explore the variables by summarising
 them, first, the variable points by gender with minimum max, average and
 standard deviation and then age, attitude, surf</em></p>
+<p>#summarise relations p &lt;- ggpairs(learning2014, mapping = aes(col
+= gender), lower = list(combo = wrap(“facethist”, bins = 20))) +
+theme_bw() p</p>
 <p>lrn_csv %&gt;% group_by(gender) %&gt;% summarise(min(points),
 max(points), mean(points), sd(points))</p>
 <p>#<em>tibble shows that women performed slightly worse in exam, but
@@ -438,6 +441,10 @@ summary(model1)</p>
 summary(model2)</p>
 <p>model3 &lt;- lm(points ~ attitude + surf + gender + age, data =
 lrn_csv) summary(model3)</p>
+<div id="plotting-the-linear-model-with-a-line-checking-model-fit" class="section level2">
+<h2>plotting the linear model with a line, checking model fit</h2>
+<p>qplot(attitude, points, data = lrn_csv) + geom_smooth(method = “lm”)
+plot(linear_attitude, which = c(1,2,5))</p>
 <p>#<em>Looking at the outputs of three models, it is clear that
 attitude variable has the most explanatory power as the firt model
 ezxplains 19.8% of the variance in the outcome variable, and the
@@ -451,6 +458,7 @@ hypothesis.</em></p>
 <p>#<em>Discussion.</em></p>
 <p>#<em>Need to know more about the attitude variable to be able to
 speculate on the possible reasons for such association.</em></p>
+</div>
 </div>
 
 

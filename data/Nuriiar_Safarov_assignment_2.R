@@ -22,6 +22,7 @@ lrn_data2$stra <- rowMeans(stra_col)
 
 str(lrn_data2)
 
+
 #select only 7 variables of interest to create lrn_analysis data set, unifying column names, checking did it work
 lrn_analysis <- lrn_data2[, c("gender","Age","Attitude", "deep", "stra", "surf", "Points")]
 str(lrn_analysis)
@@ -29,6 +30,7 @@ colnames(lrn_analysis)[2] <- "age"
 colnames(lrn_analysis)[7] <- "points"
 colnames(lrn_analysis)[3] <- "attitude"
 str(lrn_analysis)
+
 
 #writing new data set into csv file lrn_analysis.csv and checking have that worked
 write_csv(lrn_analysis, "lrn_analysis.csv", append = FALSE, col_names = TRUE)
