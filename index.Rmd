@@ -1,6 +1,6 @@
 ---
-title: "IODS course project"
-author: "Nuriiar Safarov"
+title: "IODS-project"
+author: "nuriiar"
 output:
   html_document:
     theme: cosmo
