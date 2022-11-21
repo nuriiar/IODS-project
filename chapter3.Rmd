@@ -26,10 +26,10 @@ str(alc)
 ```
 ##Background and objectives
 
-The analysis aims at identifying the social and health status related reasons behind the high alcohol consumption among students. This report will estimate a logistic regression model for alcohol consumption as dependent variable and health status, parents education, as well as the desire to take higher education. Therefore the hypotheses are:
-1. Low health status is associated with higher alcohol consumption
-2. Parents lower education is associated with higher alcohol consumption
-3. Willingness to get higher education is associated with higher alcohol consumption
+#The analysis aims at identifying the social and health status related reasons behind the high alcohol consumption among students. This report will estimate #a logistic regression model for alcohol consumption as dependent variable and health status, parents education, as well as the desire to take higher #education. Therefore the hypotheses are:
+#1. Low health status is associated with higher alcohol consumption
+#2. Parents lower education is associated with higher alcohol consumption
+#3. Willingness to get higher education is associated with higher alcohol consumption
 
 ##Expoling the variables
 ```{r}
@@ -50,15 +50,6 @@ higher_tab <- CrossTable(alc$high_use, alc$higher, digits = 1, prop.c = T, chisq
 ```{r}
 health_bp <- ggplot(data = alc, aes(x=health, fill = high_use))
 health_bp + geom_bar(position=position_dodge()) + labs(y="self-rated health")
-```
-```{r}
-
-```
-```{r}
-
-```
-```{r}
-
 ```
 
 
