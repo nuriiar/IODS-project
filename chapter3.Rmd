@@ -1,5 +1,5 @@
 ---
-title: "chapter 3"
+title: "chapter3.Rmd"
 output: html_document
 date: "2022-11-21"
 ---
@@ -33,7 +33,7 @@ str(alc)
 
 ##Expoling the variables
 ```{r}
-install.packages("gmodels")
+
 library(tidyverse)
 library(readr)
 library(dplyr)

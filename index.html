@@ -381,7 +381,7 @@ project</a>
 <ul>
 <li><a href="#plotting-the-linear-model-with-a-line-checking-model-fit" id="toc-plotting-the-linear-model-with-a-line-checking-model-fit">plotting
 the linear model with a line, checking model fit</a></li>
-<li><a href="#chapter-3" id="toc-chapter-3">chapter 3</a></li>
+<li><a href="#assignment-3" id="toc-assignment-3">Assignment 3</a></li>
 </ul></li>
 </ul>
 </div>
@@ -398,7 +398,7 @@ use R Markdown syntax.</em></p>
 <pre class="r"><code># This is a so-called &quot;R chunk&quot; where you can write R code.
 
 date()</code></pre>
-<pre><code>## [1] &quot;Mon Nov 21 11:24:14 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Mon Nov 21 15:19:28 2022&quot;</code></pre>
 <p>The text continues here. # The beginning was hectic, with a lot of
 information in different places of moodle, excercise and the book. I
 expect to at least learn how to navigate between github and desctop
@@ -422,7 +422,7 @@ writing and reading R code as well as statistical methods.</li>
 advanced methods you are using.</li>
 </ul>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Mon Nov 21 11:24:14 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Mon Nov 21 15:19:28 2022&quot;</code></pre>
 <p>Here we go again…</p>
 <p>#<em>opening relevant libraries</em></p>
 <p>library(tidyverse) library(readr) library(dplyr) library(ggplot2)</p>
@@ -525,7 +525,7 @@ writing and reading R code as well as statistical methods.</li>
 advanced methods you are using.</li>
 </ul>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Mon Nov 21 11:24:14 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Mon Nov 21 15:19:28 2022&quot;</code></pre>
 <p>Here we go again…</p>
 <p>#<em>opening relevant libraries</em></p>
 <p>library(tidyverse) library(readr) library(dplyr) library(ggplot2)</p>
@@ -629,8 +629,331 @@ for such association.</em></p>
 </blockquote>
 <hr />
 </div>
-<div id="chapter-3" class="section level2">
-<h2>chapter 3</h2>
+<div id="assignment-3" class="section level2">
+<h2>Assignment 3</h2>
+<pre class="r"><code>#Opening relevant libraries
+
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(readr)
+library(dplyr)
+library(ggplot2)</code></pre>
+<pre class="r"><code>#reading the csv data set, looking at column names and structure. It has 35 variables and 370 rows. This dataset present merged results of questionnaire of two Portuguese schools on student achievement in math and Portuguese language class and alcohol consumption in secondary education. The data attributes include student grades, demographic, social and school related features and it was collected by using school reports and questionnaires. More on the dataset from: https://archive.ics.uci.edu/ml/datasets/Student+Performance
+
+alc &lt;- read_csv(&quot;alcohol.csv&quot;,col_names = TRUE)</code></pre>
+<pre><code>## Rows: 370 Columns: 35
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (17): school, sex, address, famsize, Pstatus, Mjob, Fjob, reason, guardi...
+## dbl (17): age, Medu, Fedu, traveltime, studytime, famrel, freetime, goout, D...
+## lgl  (1): high_use
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>colnames(alc)</code></pre>
+<pre><code>##  [1] &quot;school&quot;     &quot;sex&quot;        &quot;age&quot;        &quot;address&quot;    &quot;famsize&quot;   
+##  [6] &quot;Pstatus&quot;    &quot;Medu&quot;       &quot;Fedu&quot;       &quot;Mjob&quot;       &quot;Fjob&quot;      
+## [11] &quot;reason&quot;     &quot;guardian&quot;   &quot;traveltime&quot; &quot;studytime&quot;  &quot;schoolsup&quot; 
+## [16] &quot;famsup&quot;     &quot;activities&quot; &quot;nursery&quot;    &quot;higher&quot;     &quot;internet&quot;  
+## [21] &quot;romantic&quot;   &quot;famrel&quot;     &quot;freetime&quot;   &quot;goout&quot;      &quot;Dalc&quot;      
+## [26] &quot;Walc&quot;       &quot;health&quot;     &quot;failures&quot;   &quot;paid&quot;       &quot;absences&quot;  
+## [31] &quot;G1&quot;         &quot;G2&quot;         &quot;G3&quot;         &quot;alc_use&quot;    &quot;high_use&quot;</code></pre>
+<pre class="r"><code>str(alc)</code></pre>
+<pre><code>## spc_tbl_ [370 × 35] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ school    : chr [1:370] &quot;GP&quot; &quot;GP&quot; &quot;GP&quot; &quot;GP&quot; ...
+##  $ sex       : chr [1:370] &quot;F&quot; &quot;F&quot; &quot;F&quot; &quot;F&quot; ...
+##  $ age       : num [1:370] 18 17 15 15 16 16 16 17 15 15 ...
+##  $ address   : chr [1:370] &quot;U&quot; &quot;U&quot; &quot;U&quot; &quot;U&quot; ...
+##  $ famsize   : chr [1:370] &quot;GT3&quot; &quot;GT3&quot; &quot;LE3&quot; &quot;GT3&quot; ...
+##  $ Pstatus   : chr [1:370] &quot;A&quot; &quot;T&quot; &quot;T&quot; &quot;T&quot; ...
+##  $ Medu      : num [1:370] 4 1 1 4 3 4 2 4 3 3 ...
+##  $ Fedu      : num [1:370] 4 1 1 2 3 3 2 4 2 4 ...
+##  $ Mjob      : chr [1:370] &quot;at_home&quot; &quot;at_home&quot; &quot;at_home&quot; &quot;health&quot; ...
+##  $ Fjob      : chr [1:370] &quot;teacher&quot; &quot;other&quot; &quot;other&quot; &quot;services&quot; ...
+##  $ reason    : chr [1:370] &quot;course&quot; &quot;course&quot; &quot;other&quot; &quot;home&quot; ...
+##  $ guardian  : chr [1:370] &quot;mother&quot; &quot;father&quot; &quot;mother&quot; &quot;mother&quot; ...
+##  $ traveltime: num [1:370] 2 1 1 1 1 1 1 2 1 1 ...
+##  $ studytime : num [1:370] 2 2 2 3 2 2 2 2 2 2 ...
+##  $ schoolsup : chr [1:370] &quot;yes&quot; &quot;no&quot; &quot;yes&quot; &quot;no&quot; ...
+##  $ famsup    : chr [1:370] &quot;no&quot; &quot;yes&quot; &quot;no&quot; &quot;yes&quot; ...
+##  $ activities: chr [1:370] &quot;no&quot; &quot;no&quot; &quot;no&quot; &quot;yes&quot; ...
+##  $ nursery   : chr [1:370] &quot;yes&quot; &quot;no&quot; &quot;yes&quot; &quot;yes&quot; ...
+##  $ higher    : chr [1:370] &quot;yes&quot; &quot;yes&quot; &quot;yes&quot; &quot;yes&quot; ...
+##  $ internet  : chr [1:370] &quot;no&quot; &quot;yes&quot; &quot;yes&quot; &quot;yes&quot; ...
+##  $ romantic  : chr [1:370] &quot;no&quot; &quot;no&quot; &quot;no&quot; &quot;yes&quot; ...
+##  $ famrel    : num [1:370] 4 5 4 3 4 5 4 4 4 5 ...
+##  $ freetime  : num [1:370] 3 3 3 2 3 4 4 1 2 5 ...
+##  $ goout     : num [1:370] 4 3 2 2 2 2 4 4 2 1 ...
+##  $ Dalc      : num [1:370] 1 1 2 1 1 1 1 1 1 1 ...
+##  $ Walc      : num [1:370] 1 1 3 1 2 2 1 1 1 1 ...
+##  $ health    : num [1:370] 3 3 3 5 5 5 3 1 1 5 ...
+##  $ failures  : num [1:370] 0 0 2 0 0 0 0 0 0 0 ...
+##  $ paid      : chr [1:370] &quot;no&quot; &quot;no&quot; &quot;yes&quot; &quot;yes&quot; ...
+##  $ absences  : num [1:370] 5 3 8 1 2 8 0 4 0 0 ...
+##  $ G1        : num [1:370] 2 7 10 14 8 14 12 8 16 13 ...
+##  $ G2        : num [1:370] 8 8 10 14 12 14 12 9 17 14 ...
+##  $ G3        : num [1:370] 8 8 11 14 12 14 12 10 18 14 ...
+##  $ alc_use   : num [1:370] 1 1 2.5 1 1.5 1.5 1 1 1 1 ...
+##  $ high_use  : logi [1:370] FALSE FALSE TRUE FALSE FALSE FALSE ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   school = col_character(),
+##   ..   sex = col_character(),
+##   ..   age = col_double(),
+##   ..   address = col_character(),
+##   ..   famsize = col_character(),
+##   ..   Pstatus = col_character(),
+##   ..   Medu = col_double(),
+##   ..   Fedu = col_double(),
+##   ..   Mjob = col_character(),
+##   ..   Fjob = col_character(),
+##   ..   reason = col_character(),
+##   ..   guardian = col_character(),
+##   ..   traveltime = col_double(),
+##   ..   studytime = col_double(),
+##   ..   schoolsup = col_character(),
+##   ..   famsup = col_character(),
+##   ..   activities = col_character(),
+##   ..   nursery = col_character(),
+##   ..   higher = col_character(),
+##   ..   internet = col_character(),
+##   ..   romantic = col_character(),
+##   ..   famrel = col_double(),
+##   ..   freetime = col_double(),
+##   ..   goout = col_double(),
+##   ..   Dalc = col_double(),
+##   ..   Walc = col_double(),
+##   ..   health = col_double(),
+##   ..   failures = col_double(),
+##   ..   paid = col_character(),
+##   ..   absences = col_double(),
+##   ..   G1 = col_double(),
+##   ..   G2 = col_double(),
+##   ..   G3 = col_double(),
+##   ..   alc_use = col_double(),
+##   ..   high_use = col_logical()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre>
+<p>##Background and objectives</p>
+<p>#The analysis aims at identifying the social and health status
+related reasons behind the high alcohol consumption among students. This
+report will estimate #a logistic regression model for alcohol
+consumption as dependent variable and health status, parents education,
+as well as the desire to take higher #education. Therefore the
+hypotheses are: #1. Low health status is associated with higher alcohol
+consumption #2. Parents lower education is associated with higher
+alcohol consumption #3. Willingness to get higher education is
+associated with higher alcohol consumption</p>
+<p>##Expoling the variables</p>
+<pre class="r"><code>library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(gmodels)
+##Crosstabulating the variables
+health_tab &lt;- CrossTable(alc$high_use, alc$health, digits = 1, prop.c = T, chisq = T)</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## | Chi-square contribution |
+## |           N / Row Total |
+## |           N / Col Total |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  370 
+## 
+##  
+##              | alc$health 
+## alc$high_use |         1 |         2 |         3 |         4 |         5 | Row Total | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+##        FALSE |        35 |        28 |        61 |        45 |        90 |       259 | 
+##              |       0.2 |       0.1 |       0.4 |       0.1 |       0.7 |           | 
+##              |       0.1 |       0.1 |       0.2 |       0.2 |       0.3 |       0.7 | 
+##              |       0.8 |       0.7 |       0.8 |       0.7 |       0.6 |           | 
+##              |       0.1 |       0.1 |       0.2 |       0.1 |       0.2 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+##         TRUE |        11 |        14 |        19 |        17 |        50 |       111 | 
+##              |       0.6 |       0.2 |       1.0 |       0.1 |       1.5 |           | 
+##              |       0.1 |       0.1 |       0.2 |       0.2 |       0.5 |       0.3 | 
+##              |       0.2 |       0.3 |       0.2 |       0.3 |       0.4 |           | 
+##              |       0.0 |       0.0 |       0.1 |       0.0 |       0.1 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+## Column Total |        46 |        42 |        80 |        62 |       140 |       370 | 
+##              |       0.1 |       0.1 |       0.2 |       0.2 |       0.4 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+## 
+##  
+## Statistics for All Table Factors
+## 
+## 
+## Pearson&#39;s Chi-squared test 
+## ------------------------------------------------------------
+## Chi^2 =  4.895403     d.f. =  4     p =  0.2981992 
+## 
+## 
+## </code></pre>
+<pre class="r"><code>Medu_tab &lt;- CrossTable(alc$high_use, alc$Medu, digits = 1, prop.c = T, chisq = T)</code></pre>
+<pre><code>## Warning in chisq.test(t, correct = FALSE, ...): Chi-squared approximation may be
+## incorrect</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## | Chi-square contribution |
+## |           N / Row Total |
+## |           N / Col Total |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  370 
+## 
+##  
+##              | alc$Medu 
+## alc$high_use |         0 |         1 |         2 |         3 |         4 | Row Total | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+##        FALSE |         1 |        31 |        78 |        57 |        92 |       259 | 
+##              |       0.6 |       0.3 |       1.7 |       1.0 |       0.0 |           | 
+##              |       0.0 |       0.1 |       0.3 |       0.2 |       0.4 |       0.7 | 
+##              |       0.3 |       0.6 |       0.8 |       0.6 |       0.7 |           | 
+##              |       0.0 |       0.1 |       0.2 |       0.2 |       0.2 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+##         TRUE |         2 |        18 |        18 |        36 |        37 |       111 | 
+##              |       1.3 |       0.7 |       4.1 |       2.4 |       0.1 |           | 
+##              |       0.0 |       0.2 |       0.2 |       0.3 |       0.3 |       0.3 | 
+##              |       0.7 |       0.4 |       0.2 |       0.4 |       0.3 |           | 
+##              |       0.0 |       0.0 |       0.0 |       0.1 |       0.1 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+## Column Total |         3 |        49 |        96 |        93 |       129 |       370 | 
+##              |       0.0 |       0.1 |       0.3 |       0.3 |       0.3 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+## 
+##  
+## Statistics for All Table Factors
+## 
+## 
+## Pearson&#39;s Chi-squared test 
+## ------------------------------------------------------------
+## Chi^2 =  12.23079     d.f. =  4     p =  0.01571511 
+## 
+## 
+## </code></pre>
+<pre class="r"><code>Fedu_tab &lt;- CrossTable(alc$high_use, alc$Fedu, digits = 1, prop.c = T, chisq = T)</code></pre>
+<pre><code>## Warning in chisq.test(t, correct = FALSE, ...): Chi-squared approximation may be
+## incorrect</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## | Chi-square contribution |
+## |           N / Row Total |
+## |           N / Col Total |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  370 
+## 
+##  
+##              | alc$Fedu 
+## alc$high_use |         0 |         1 |         2 |         3 |         4 | Row Total | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+##        FALSE |         2 |        49 |        75 |        70 |        63 |       259 | 
+##              |       0.3 |       0.1 |       0.0 |       0.1 |       0.1 |           | 
+##              |       0.0 |       0.2 |       0.3 |       0.3 |       0.2 |       0.7 | 
+##              |       1.0 |       0.7 |       0.7 |       0.7 |       0.7 |           | 
+##              |       0.0 |       0.1 |       0.2 |       0.2 |       0.2 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+##         TRUE |         0 |        24 |        30 |        27 |        30 |       111 | 
+##              |       0.6 |       0.2 |       0.1 |       0.2 |       0.2 |           | 
+##              |       0.0 |       0.2 |       0.3 |       0.2 |       0.3 |       0.3 | 
+##              |       0.0 |       0.3 |       0.3 |       0.3 |       0.3 |           | 
+##              |       0.0 |       0.1 |       0.1 |       0.1 |       0.1 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+## Column Total |         2 |        73 |       105 |        97 |        93 |       370 | 
+##              |       0.0 |       0.2 |       0.3 |       0.3 |       0.3 |           | 
+## -------------|-----------|-----------|-----------|-----------|-----------|-----------|
+## 
+##  
+## Statistics for All Table Factors
+## 
+## 
+## Pearson&#39;s Chi-squared test 
+## ------------------------------------------------------------
+## Chi^2 =  1.689156     d.f. =  4     p =  0.7926865 
+## 
+## 
+## </code></pre>
+<pre class="r"><code>higher_tab &lt;- CrossTable(alc$high_use, alc$higher, digits = 1, prop.c = T, chisq = T)</code></pre>
+<pre><code>## Warning in chisq.test(t, correct = TRUE, ...): Chi-squared approximation may be
+## incorrect
+
+## Warning in chisq.test(t, correct = TRUE, ...): Chi-squared approximation may be
+## incorrect</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## | Chi-square contribution |
+## |           N / Row Total |
+## |           N / Col Total |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  370 
+## 
+##  
+##              | alc$higher 
+## alc$high_use |        no |       yes | Row Total | 
+## -------------|-----------|-----------|-----------|
+##        FALSE |         7 |       252 |       259 | 
+##              |       1.6 |       0.1 |           | 
+##              |       0.0 |       1.0 |       0.7 | 
+##              |       0.4 |       0.7 |           | 
+##              |       0.0 |       0.7 |           | 
+## -------------|-----------|-----------|-----------|
+##         TRUE |         9 |       102 |       111 | 
+##              |       3.7 |       0.2 |           | 
+##              |       0.1 |       0.9 |       0.3 | 
+##              |       0.6 |       0.3 |           | 
+##              |       0.0 |       0.3 |           | 
+## -------------|-----------|-----------|-----------|
+## Column Total |        16 |       354 |       370 | 
+##              |       0.0 |       1.0 |           | 
+## -------------|-----------|-----------|-----------|
+## 
+##  
+## Statistics for All Table Factors
+## 
+## 
+## Pearson&#39;s Chi-squared test 
+## ------------------------------------------------------------
+## Chi^2 =  5.487288     d.f. =  1     p =  0.01915523 
+## 
+## Pearson&#39;s Chi-squared test with Yates&#39; continuity correction 
+## ------------------------------------------------------------
+## Chi^2 =  4.258559     d.f. =  1     p =  0.03905304 
+## 
+## </code></pre>
+<p>##bar charts</p>
+<pre class="r"><code>health_bp &lt;- ggplot(data = alc, aes(x=health, fill = high_use))
+health_bp + geom_bar(position=position_dodge()) + labs(y=&quot;self-rated health&quot;)</code></pre>
+<p><img src="data:image/png;base64,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" width="576" /></p>
 <p>(more chapters to be added similarly as we proceed with the
 course!)</p>
 </div>
