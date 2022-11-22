@@ -29,7 +29,7 @@ str(alc)
 #The analysis aims at identifying the social and health status related reasons behind the high alcohol consumption among students. This report will estimate #a logistic regression model for alcohol consumption as dependent variable and health status, parents education, as well as the desire to take higher #education. Therefore the hypotheses are:
 #1. Low health status is associated with higher alcohol consumption
 #2. Parents lower education is associated with higher alcohol consumption
-#3. Willingness to get higher education is associated with higher alcohol consumption
+#3. Willingness to get higher education is negatively associated with higher alcohol consumption
 
 ##Expoling the variables
 ```{r}
@@ -46,10 +46,68 @@ Fedu_tab <- CrossTable(alc$high_use, alc$Fedu, digits = 1, prop.c = T, chisq = T
 higher_tab <- CrossTable(alc$high_use, alc$higher, digits = 1, prop.c = T, chisq = T)
 
 ```
-##bar charts
+##Drawing bar charts for vatiables of interest against high alcohol use.
 ```{r}
-health_bp <- ggplot(data = alc, aes(x=health, fill = high_use))
-health_bp + geom_bar(position=position_dodge()) + labs(y="self-rated health")
+health_bar <- ggplot(data = alc, aes(x=health, fill = high_use))
+health_bar + geom_bar(position=position_dodge()) + labs(y="self-rated health")
+
+Medu_bar <- ggplot(data = alc, aes(x=Medu, fill = high_use))
+Medu_bar + geom_bar(position=position_dodge()) + labs(y="Mother education")
+
+Fedu_bar <- ggplot(data = alc, aes(x=Fedu, fill = high_use))
+Fedu_bar + geom_bar(position=position_dodge()) + labs(y="Father education")
+
+higher_bar <- ggplot(data = alc, aes(x=higher, fill = high_use))
+higher_bar + geom_bar(position=position_dodge()) + labs(y="Wants to get higher degree")
+
+help(geom_bar)
+
+
+```
+## Building box plots for variables of interest
+```{r}
+
+
+health_box <- ggplot(alc, aes(x = high_use, y = health))
+health_box + geom_boxplot()
+
+Medu_box <- ggplot(alc, aes(x = high_use, y = Medu))
+Medu_box + geom_boxplot()
+
+Fedu_box <- ggplot(alc, aes(x = high_use, y = Fedu))
+Fedu_box + geom_boxplot()
+
+higher_box <- ggplot(alc, aes(x = high_use, y = higher))
+higher_box + geom_boxplot()
+
+```
+##Cross tabs and chi-square value indicate that there is a significant association between mother's education and alcohol use and intention to acquire higher educaiton and alcohol use. The plots support this. Box plots may not be the best way to display the data, as three of the chosen variables are on a likert scale and one is dichotomous, that gives not very informative picture. At this point, we can explore furhter two of the initial hypotheses (2 and 3) , as the hypothesis (1) would probably not give statistically significant results in regression analysis either.
+
+```{r}
+model1 <- glm(high_use ~ higher + Medu + Fedu + health, data = alc, family = "binomial")
+summary(model1)
 ```
 
+### Counting the odds ratios to improve interpretation ability, with their confidence intervals.
+```{r}
+
+OR <- coef(model1) %>% exp
+
+CI <- confint(model1)%>% exp
+
+cbind(OR, CI) 
+
+```
+##Estimating the model fit with r square value
+```{r}
+install.packages('ISLR')
+library(ISLR)
+with(summary(model1), 1 - deviance/null.deviance)
+
+```
+## R squared is 0.01 which means that the model1 explains only 1% of the variance in outcome variable. It means that the explanatory power of the model is very low and other variables need to be considered.
+
+## Discussion
+Regresison model only indicated association between desire to get higher education and higher alcohol use. It means that if a student intends to get a higher education, he would be 0.75 times more likely to have high alcohol consumption (which means less alcohol use). This supports the hypothesis #3.
+It is widely known from previous literature on substance abuse that self-rated health is a valid indicator of health. It has also been studied that lower health would commonly be associated with higher alcohol use. However, these results do not show similar tendency, probably because of the age of the participants, as for school students the indicator of self-rated health may not refer to the actual health status, and the effect of alcohol abuse is not yet visible in health outcomes. Previous studies in sociology have shown that parents social status and cultural capital are associated with their children healthy life style. Yet, the current report does not support such findings. The reasons may be that the education alone does not always point to the social status. For furhter research, more indicators should be included. Thereby, I reject hypothesis #2 and #1.
 
