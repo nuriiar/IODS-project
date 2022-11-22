@@ -352,8 +352,7 @@ display: none;
 </div>
 
 
-<div id="insert-chapter-2-title-here" class="section level1">
-<h1>Insert chapter 2 title here</h1>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD # Insert chapter 2 title here</p>
 <p><em>Describe the work you have done this week and summarize your
 learning.</em></p>
 <ul>
@@ -364,7 +363,7 @@ writing and reading R code as well as statistical methods.</li>
 advanced methods you are using.</li>
 </ul>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Wed Nov 16 13:11:29 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Wed Nov 16 14:56:59 2022&quot;</code></pre>
 <p>Here we go again…</p>
 <p>#<em>opening relevant libraries</em></p>
 <p>library(tidyverse) library(readr) library(dplyr) library(ggplot2)</p>
@@ -456,9 +455,119 @@ supporting the hypothesis. Association of surf variable with an outcome
 is not statistically significant, that goes against the
 hypothesis.</em></p>
 <p>#<em>Discussion.</em></p>
-<p>#<em>Need to know more about the attitude variable to be able to
-speculate on the possible reasons for such association.</em></p>
-</div>
+<p>======= # Insert chapter 2 title here</p>
+<p><em>Describe the work you have done this week and summarize your
+learning.</em></p>
+<ul>
+<li>Describe your work and results clearly.</li>
+<li>Assume the reader has an introductory course level understanding of
+writing and reading R code as well as statistical methods.</li>
+<li>Assume the reader has no previous knowledge of your data or the more
+advanced methods you are using.</li>
+</ul>
+<pre class="r"><code>date()</code></pre>
+<pre><code>## [1] &quot;Wed Nov 16 14:56:59 2022&quot;</code></pre>
+<p>Here we go again…</p>
+<p>#<em>opening relevant libraries</em></p>
+<p>library(tidyverse) library(readr) library(dplyr) library(ggplot2)</p>
+<p>#<em>reading the csv data set, looking at its structure and
+dimensions. It has 7 variables and 166 rows, one of the variables is a
+string variable with characters stored in it (gender) and 6 other
+variables are floats (double precision floats)</em></p>
+<p>lrn_csv &lt;- read_csv(“lrn_analysis.csv”,col_names = TRUE)
+str(lrn_csv) dim(lrn_csv)</p>
+<p>#<em>I Chose the variables for analysis: gender, age, attitude, and
+surf. The idea is to test how the emotions-related variables are
+associated with points students received at statistics exam, controlling
+for gender and age. Firstly, we explore the variables by summarising
+them, first, the variable points by gender with minimum max, average and
+standard deviation and then age, attitude, surf</em></p>
+<p>lrn_csv %&gt;% group_by(gender) %&gt;% summarise(min(points),
+max(points), mean(points), sd(points))</p>
+<p>#<em>tibble shows that women performed slightly worse in exam, but
+the difference is marginal</em></p>
+<p>lrn_csv %&gt;% summarise(min(age), max(age), mean(age), sd(age))</p>
+<p>#<em>This helps to get to know who are the study participants.
+Students vary in age from 17 to 55 years, with an average at 25.5, and
+standard deviation of 7.77</em></p>
+<p>lrn_csv %&gt;% summarise(min(attitude), max(attitude),
+mean(attitude), sd(attitude))</p>
+<p>#<em>the attitude is an index for attitude towards statistics, a
+subjective measurement that takes a minimum value at 14 and maximum at
+50, with a mean of 31.4 and standard deviation of 7.3</em></p>
+<p>lrn_csv %&gt;% summarise(min(surf), max(surf), mean(surf),
+sd(surf))</p>
+<p>#<em>surf is a composite variable based on likert scale variables
+(1-5 points) for opinion measurement from strongly disagree to strongly
+agree. The mean value is 2.8 with a standard deviation of 0.5. The
+questions concern subjective opinion related to interest in statistics
+course, feeling of whether the course is actually worth going to. I
+hypothesise that this variable reflects on inner motivation of student
+to complete the course, that may directly influence the final exam
+score. Given the formulation of sub-questions such as “There’s not much
+of the work here that I find interesting or relevant”, in general
+students are closer to agreeing with low interest in the
+course.</em></p>
+<p>#<em>Next is graphics. Getting the scatter plots of exam points
+against our independent variables to have a first glimpse of the
+association.</em></p>
+<p>lrn_csv %&gt;% ggplot(aes(x = attitude, y = points)) +
+geom_point()</p>
+<p>#<em>this scatter plot displays dots for attitude and exam score.
+From the picture, it is clear that the more positive the attitude is,
+the higher would be the points.</em></p>
+<p>lrn_csv %&gt;% ggplot(aes(x = surf, y = points)) + geom_point()</p>
+<p>#<em>The association of surf and points variables does not give as
+clear of a result as in previous scatter. Although, a trend of a
+backwards relation can be observed, meaning that the higher the value of
+surf variable, the lower would be the points, that is supporting the
+hypothesis</em></p>
+<p>lrn_csv %&gt;% ggplot(aes(x = age, y = points)) + geom_point()</p>
+<p>#<em>Looking at age and points plot, we can see that most of the
+students are between 18 and 25 years of age, and there is an upward
+trend of raising age and points toghether, yet not linear. If the sample
+was bigger, we could have tried dividing it to age groups, as there are
+different trends for those under 25s and those older than that, but here
+it is inappropriate</em></p>
+<p>#<em>regression. Fitting a linear regression models, introducing
+variables stepwise for points as dependent and our variables of
+interest: attitude and surf as independent, and then controlling also
+for gender and age.</em></p>
+<p>help(lm)</p>
+<p>model1 &lt;- lm(points ~ attitude, data = lrn_csv)
+summary(model1)</p>
+<p>model2 &lt;- lm(points ~ attitude + surf, data = lrn_csv)
+summary(model2)</p>
+<p>model3 &lt;- lm(points ~ attitude + surf + gender + age, data =
+lrn_csv) summary(model3)</p>
+<p>#<em>Looking at the outputs of three models, it is clear that
+attitude variable has the most explanatory power as the firt model
+ezxplains 19.8% of the variance in the outcome variable, and the
+introduction of the othe three variables increases the value of r
+squared only marginally. Attitude is the only variable associated with
+the exam points, so that the more positive the attitude towards
+statistics in general, the higher would be the exam scores, partly
+supporting the hypothesis. Association of surf variable with an outcome
+is not statistically significant, that goes against the
+hypothesis.</em></p>
+<p>#<em>Discussion.</em></p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>05a95f7acc5c8de61286edb98471e31ccea86e21 #<em>Need to know more about
+the attitude variable to be able to speculate on the possible reasons
+for such association.</em></p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
 </div>
 
 
