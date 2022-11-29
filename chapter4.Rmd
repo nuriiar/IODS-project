@@ -16,7 +16,6 @@ library(MASS)
 library(tidyr)
 library(corrplot)
 library(ggplot2)
-library(GGally)
 #install.packages("GGally")
 library(GGally)
 data("Boston")
@@ -95,17 +94,17 @@ table(correct = correct_classes, predicted = lda.pred$class)
 
 ##K-means clustering
 ```{r}
-data1 <- data(Boston)
-data1 <- scale(Boston)
-data1 <- as.data.frame(data1)
-class(data1)
-distance <- dist(data1, method = "manhattan")
-summary(distance)
-km <- kmeans(data1, centers = 3)
-gprs <- ggpairs(data1, col = km$cluster)
-gprs
+set.seed(5)
+data("Boston")
+boston_scaled <- as.data.frame(scale(Boston))
+dist_eu <- dist(boston_scaled)
+summary(dist_eu)
+
+km <- kmeans(boston_scaled, centers = 2)
+prs <- pairs(boston_scaled, col = km$cluster)
+prs
 ```
-#
+#The data is clearly separated to red and black groups, which shows a high relevance of clustering for predictions.
 
 
 
