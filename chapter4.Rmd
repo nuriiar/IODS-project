@@ -8,10 +8,11 @@ output: html_document
 ```{r, echo=FALSE}
 
 ```
+# Clustering
 
-##Exlore and load the data
-#Here I am unpacking all libraries that are in use, and exploring the data. This dataset contains information collected by the U.S #Census Service concerning housing in the area of Boston Mass. It was obtained from the StatLib archive #(http://lib.stat.cmu.edu/datasets/boston), and has been used extensively throughout the literature to benchmark algorithms. However, #these comparisons were primarily done outside of Delve and are thus somewhat suspect. The dataset is small in size with only 506 #cases and 14 variables
+
 ```{r}
+#Exlore and load the data
 library(MASS)
 library(tidyr)
 library(corrplot)
@@ -23,19 +24,22 @@ str(Boston)
 dim(Boston)
 summary(Boston)
 ```
-##exploring the data with graphics
+Here I am unpacking all libraries that are in use, and exploring the data. This dataset contains information collected by the U.S Census Service concerning housing in the area of Boston Mass. It was obtained from the StatLib archive (http://lib.stat.cmu.edu/datasets/boston), and has been used extensively throughout the literature to benchmark algorithms. However, these comparisons were primarily done outside of Delve and are thus somewhat suspect. The dataset is small in size with only 506 cases and 14 variables
+
+
 ```{r}
+#Exploring the data with graphics
 Boston_pairs <- pairs(Boston)
 cor_matrix <- cor(Boston)
 cor_matrix
 corrplot(cor_matrix, method="circle")
 ```
-#Correlation coefficient varies between [-1; 1], with 0 meaning no correlation and 1 or -1 pointing to absolute correlation. For #example variable "rad" (index of accessibility to radial highways) is highly correlated with variable "tax" (full-value property-tax #rate per \$10,000) - with 0.91 value, which is understandable since the proximity to highways may deternime the price for a property #and hence its tax.
-#Corrplot is just helping to see the strong correlations with coloured and differently sized circles for better representation of #previous results.
+Correlation coefficient varies between [-1; 1], with 0 meaning no correlation and 1 or -1 pointing to absolute correlation. For example variable "rad" (index of accessibility to radial highways) is highly correlated with variable "tax" (full-value property-tax rate per \$10,000) - with 0.91 value, which is understandable since the proximity to highways may deternime the price for a property and hence its tax.
+Corrplot is just helping to see the strong correlations with coloured and differently sized circles for better representation of previous results.
 
-## Scaling the dataset and categorising the crime rate variable (crim)
+
 ```{r}
-
+#Scaling the dataset and categorising the crime rate variable (crim)
 boston_scaled <- scale(Boston)
 summary(boston_scaled)
 class(boston_scaled)
@@ -47,10 +51,11 @@ table(crime)
 boston_scaled <- dplyr::select(boston_scaled, -crim)
 boston_scaled <- data.frame(boston_scaled, crime)
 ```
-#Here we scaled the dataset for better comparability. ALso replaced crim variable with crime that is categorised on the basis of its #quantile points for low, medium low, medium high and high crime rates in the area. Such categorisations may reduce the data and lose #some information, yet it might be helpful for interpretation purposes.
+Here we scaled the dataset for better comparability. ALso replaced crim variable with crime that is categorised on the basis of its quantile points for low, medium low, medium high and high crime rates in the area. Such categorisations may reduce the data and lose some information, yet it might be helpful for interpretation purposes.
 
-##Dividing the dataset on train and test sets
+
 ```{r}
+#Dividing the dataset on train and test sets
 n <- nrow(boston_scaled)
 ind <- sample(n,  size = n * 0.8)
 train <- boston_scaled[ind,]
@@ -58,10 +63,11 @@ test <- boston_scaled[-ind,]
 correct_classes <- test$crime
 test <- dplyr::select(test, -crime)
 ```
-#We split the data to test and train sets, where the train data consists of 80% of cases chosen randomly. Like this we will be able to test the model fit.
+We split the data to test and train sets, where the train data consists of 80% of cases chosen randomly. Like this we will be able to test the model fit.
 
-##Fitting the linear discriminant analysis on the train set
+
 ```{r}
+#Fitting the linear discriminant analysis on the train set
 colnames(boston_scaled)
 lda.fit <- lda(crime  ~ zn + indus + chas + nox + rm + age + dis + rad + tax + ptratio + black + lstat + medv, data = train)
 
@@ -81,19 +87,21 @@ plot(lda.fit, dimen = 2, col = classes, pch = classes)
 lda.arrows(lda.fit, myscale = 2)
 ```
 
-# if we see the results the proportion of trace, we can see that the first dimension already achieved 95% of separation, and the 2nd #has only 0.03%, which means we the 1 dimension should be retained and analysed as the one explaining most of variation.
-#For Coeffitiencs of linear discriminant of the LD1, we see that rad load the most, so it is most proximate to the crime variable.
-## How our LDA model performs
+If we see the results the proportion of trace, we can see that the first dimension already achieved 95% of separation, and the 2nd has only 0.03%, which means we the 1 dimension should be retained and analysed as the one explaining most of variation.
+For Coeffitiencs of linear discriminant of the LD1, we see that rad load the most, so it is most proximate to the crime variable.
+
 ```{r}
+#How our LDA model performs
 lda.pred <- predict(lda.fit, newdata = test)
 help(lda.pred)
 table(correct = correct_classes, predicted = lda.pred$class)
 
 ```
-#What we did is we run the LDA on the train and on test data and compared the results in a crosstab. Table shows that the cases are #mostly positioned in the same groups, which shows a relatively good fit
+What we did is we run the LDA on the train and on test data and compared the results in a crosstab. Table shows that the cases are mostly positioned in the same groups, which shows a relatively good fit
 
-##K-means clustering
+
 ```{r}
+#K-means clustering
 set.seed(5)
 data("Boston")
 boston_scaled <- as.data.frame(scale(Boston))
@@ -104,7 +112,7 @@ km <- kmeans(boston_scaled, centers = 2)
 prs <- pairs(boston_scaled, col = km$cluster)
 prs
 ```
-#The data is clearly separated to red and black groups, which shows a high relevance of clustering for predictions.
+The data is clearly separated to red and black groups, which shows a high relevance of clustering for predictions.
 
 
 
