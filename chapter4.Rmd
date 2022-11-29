@@ -59,7 +59,7 @@ test <- boston_scaled[-ind,]
 correct_classes <- test$crime
 test <- dplyr::select(test, -crime)
 ```
-#
+#We split the data to test and train sets, where the train data consists of 80% of cases chosen randomly. Like this we will be able to test the model fit.
 
 ##Fitting the linear discriminant analysis on the train set
 ```{r}
@@ -79,19 +79,21 @@ lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0
 
 classes <- as.numeric(train$crime)
 plot(lda.fit, dimen = 2, col = classes, pch = classes)
-lda.arrows(lda.fit, myscale = 1)
+lda.arrows(lda.fit, myscale = 2)
 ```
 
-
-##
+# if we see the results the proportion of trace, we can see that the first dimension already achieved 95% of separation, and the 2nd #has only 0.03%, which means we the 1 dimension should be retained and analysed as the one explaining most of variation.
+#For Coeffitiencs of linear discriminant of the LD1, we see that rad load the most, so it is most proximate to the crime variable.
+## How our LDA model performs
 ```{r}
 lda.pred <- predict(lda.fit, newdata = test)
 help(lda.pred)
 table(correct = correct_classes, predicted = lda.pred$class)
 
 ```
+#What we did is we run the LDA on the train and on test data and compared the results in a crosstab. Table shows that the cases are #mostly positioned in the same groups, which shows a relatively good fit
 
-
+##K-means clustering
 ```{r}
 data1 <- data(Boston)
 data1 <- scale(Boston)
@@ -100,10 +102,10 @@ class(data1)
 distance <- dist(data1, method = "manhattan")
 summary(distance)
 km <- kmeans(data1, centers = 3)
-ggpairs(data1, col = km$cluster)
-
+gprs <- ggpairs(data1, col = km$cluster)
+gprs
 ```
-
+#
 
 
 
