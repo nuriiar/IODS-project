@@ -5,7 +5,8 @@
 library(dplyr)
 library(tidyverse)
 
-# Reading the Human development and Gender inequality data
+# Reading the Human development index and Gender inequality data. Original source is https://hdr.undp.org/data-center/human-development-index#/indicies/HDI
+
 hd <- read_csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/human_development.csv")
 gii <- read_csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/gender_inequality.csv", na = "..")
 
@@ -13,10 +14,14 @@ gii <- read_csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open
 # Exploring the data with structure, dimensions, summaries.
 
 str(hd)
+dim(hd)
 summary(hd)
+colnames(hd)
 
 str(gii)
+dim(gii)
 summary(gii)
+colnames(gii)
 # Look at the meta files and rename the variables with (shorter) descriptive names.
 colnames(hd) <- c('HDI.Rank', 'Country', 'HDI', 'Life.Exp', 'Edu.Exp', 'Edu.Mean', 'GNI', 'GNI-HDI.Rank')
 colnames(gii) <- c('GII.Rank', 'Country', 'GII', 'Mat.Mor', 'Ado.Birth', 'Parli.F', 'Edu2.F', 'Edu2.M', 'Labo.F', 'Labo.M')
@@ -30,38 +35,42 @@ human <- inner_join(hd, gii, by = 'Country')
 str(human)
 
 write_csv(human, 'human.csv')
-
-# Please note human.csv has been overwritten by the code for assignment 5 below
-# The dimension of human.csv will match the description of Assignment 5, instead of this assignment
-
-
-
-
-
-# Author: Jue Hou
-# Date: 2022-11-18
-# Description: Assignment 5
-
-# Load the ‘human’ data into R. Explore the structure and the dimensions of the data and describe the dataset briefly, assuming the reader has no previous knowledge of it (this is now close to the reality, since you have named the variables yourself). (0-1 point)
 human <- read_csv('human.csv')
-# This dataset originates from the United Nations Development Programme. It is assembled from two datasets: “Human development” and “Gender inequality”. It contains 195 observations and 19 variables. Observations are listed according to the human development index rank, which is also the first column. More detailed metadata can be found at: https://github.com/KimmoVehkalahti/Helsinki-Open-Data-Science/blob/master/datasets/human_meta.txt. Except for the Country column is in string format, the rest of the variables are numbers.
+head(human)
 
-# Mutate the data: transform the Gross National Income (GNI) variable to numeric (using string manipulation). Note that the mutation of 'human' was NOT done in the Exercise Set. (1 point)
-human$GNI <- gsub(",", "", human$GNI) %>% as.numeric
+
+#assignment 5, overwrting the human file for analysis
+
+#reading the data into human1 object and seeing its structure. More on data in the beginning of the .R file
+human1 <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/human1.txt", header = T, sep = ",")
+str(human1)
+colnames(human1)
+
+#mutating the GNI variable to numeric
+head(human1)
+class(human1$GNI)
+human1$GNI <- gsub(",", ".", human1$GNI) %>% as.numeric
+
+#checking did it work
+class(human1$GNI)
+head(human1)
 
 # Exclude unneeded variables: keep only the columns matching the following variable names (described in the meta file above):  "Country", "Edu2.FM", "Labo.FM", "Edu.Exp", "Life.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F" (1 point)
+
 keep <- c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F")
-human <- select(human, one_of(keep))
+human1 <- select(human1, one_of(keep))
 
-# Remove all rows with missing values (1 point).
-human <- filter(human, complete.cases(human))
+# Remove all rows with missing values
+comp <- complete.cases(human1)
+human1 <- filter(human1, complete.cases(human1))
 
-# Remove the observations which relate to regions instead of countries. (1 point)
-last <- nrow(human) - 7
-human <- human[1:last, ]
+#Removing regiouns and leaving only countries
+tail(human1)
+last <- nrow(human1) - 7
+human1 <- human1[1:last, ]
+rownames(human1) <- human1$Country
+head(human1)
+#deleting country variable
+human1 <- select(human1, -Country)
 
-# Define the row names of the data by the country names and remove the country name column from the data. The data should now have 155 observations and 8 variables. Save the human data in your data folder including the row names. You can overwrite your old ‘human’ data. (1 point)
-country <- human$Country
-human <- select(human, -Country)
-rownames(human) <- country
-write.csv(human, 'human.csv')
+write.csv(human1, 'human.csv')
