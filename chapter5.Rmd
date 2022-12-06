@@ -68,5 +68,5 @@ mca <- MCA(tea_time, graph = FALSE)
 summary(mca)
 plot(mca, invisible=c("ind"),habillage = "quali")
 ```
-From the summary of MCA on tea data, we can see that the first 3 loaded 41% of inertia meaning that they only explain 41% of the total variance in the chosen variables. This shows that the variables do not stick together that well, and there is no clear dimension or factor explaining why values vary in the variables. This may be due to the fact that the MCA does not allow rotation, and might be not suitable for analysis of many strong dimensions.
+From the summary of MCA on tea data, we can see that the first 3 loaded 41% of inertia meaning that they only explain 41% of the total variance in the chosen variables. This shows that the variables do not stick together that well, and there is no clear dimension or factor explaining why values vary in the variables. This may be due to the fact that the MCA does not allow rotation, and might be not suitable for analysis of many strong dimensions..
 Yet, from the plot we see that a lot of values are graphically proximate to each other, values such as earl gray, black, not.lunch, alone, no.sugar lunch, lemon, milk are quite close considering both x and y axes. - This means that the first two dimensions do have some explanatory power for the variation in those chosen variables. 
