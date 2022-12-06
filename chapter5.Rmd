@@ -26,8 +26,8 @@ ggpairs(human)
 
 cor(human) %>% corrplot()
 ```
-
-
+The data is human development indices from the UN, with multiple measures. For more on data and the indices see: https://hdr.undp.org/data-center/human-development-index#/indicies/HDI
+Correlation plot reveals interesting trends in relations of the variables: for example, life expectancy at birth and expected years of schooling have a strong linear positive correlation.
 
 ```{r}
 #PCA
@@ -36,8 +36,10 @@ summary(pca_human)
 biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
 
 ```
-some interpretations
+In unstandardised data, we can see the summary of PCA. There, we can clearly see, that first two principle components already explain 98% of the variance, meaning only those two dimensions are important to study.
+
 ```{r}
+help(biplot)
 #PCA for standardised data
 human_std <- scale(human)
 pca_human_std <- prcomp(human_std)
@@ -45,14 +47,18 @@ summary(pca_human_std)
 biplot(pca_human_std, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
 
 ```
+According to the summary of a PCA on standardised data, there are more dimensions that are important comparing to unstandardised model, with the first one explaining 49% of variation and the 2 to 4 each explaining about 10-15 % of the variance. Yet, the biplot extracts only two dimensions as 4 or 5 dimensional representation is hard for human imagination and impossible to draw. It is reasonable to analyse only first two or three dim, so we take components 1 and 2.
+PC1 probably represents the overall health in the countries, in general countries with worse life exp and mortality would be positioned further from 0 value. The PC2 might represent overall equality or gender equality with most unequal countries being positioned lower in the chart (mostly muslim states). The unstandardised chart is too difficult to see, what countries are in the middle and why, need to rescale to make it more analysable.
 Tea data 
 ```{r}
 tea <- read.csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/tea.csv", stringsAsFactors = TRUE)
 keep1 <- c("Tea", "How", "how", "sugar", "where", "lunch")
 tea_time <- select(tea, one_of(keep1))
+head(tea_time)
 #pivot_longer(tea_time, cols = everything()) %>% ggplot(aes(value)) + facet_wrap("name", scales = "free")
 mca <- MCA(tea_time, graph = FALSE)
 summary(mca)
 plot(mca, invisible=c("ind"),habillage = "quali")
 ```
-MCA
+From the summary of MCA on tea data, we can see that the first 3 loaded 41% of inertia meaning that they only explain 41% of the total variance in the chosen variables. This shows that the variables do not stick together that well, and there is no clear dimension or factor explaining why values vary in the variables. This may be due to the fact that the MCA does not allow rotation, and might be not suitable for analysis of many strong dimensions.
+Yet, from the plot we see that a lot of values are graphically proximate to each other, values such as earl gray, black, not.lunch, alone, no.sugar lunch, lemon, milk are quite close considering both x and y axes. 
