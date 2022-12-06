@@ -7,12 +7,14 @@ output: html_document
 
 #PCA and MCA
 
-```{r libr}
+```{r}
 #unpacking the libraries
 library(dplyr)
 library(corrplot)
 library(GGally)
 library(tidyverse)
+library(ggplot2)
+library(FactoMineR)
 set.seed(1)
 #reading the data
 human <- read.csv("human.csv", header = T, row.names = 1)
@@ -27,14 +29,15 @@ cor(human) %>% corrplot()
 
 
 
-```{r PCA}
+```{r}
 #PCA
 pca_human <- prcomp(human)
 summary(pca_human)
 biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
 
 ```
-```{r PCA_std}
+some interpretations
+```{r}
 #PCA for standardised data
 human_std <- scale(human)
 pca_human_std <- prcomp(human_std)
@@ -42,18 +45,14 @@ summary(pca_human_std)
 biplot(pca_human_std, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
 
 ```
-Tea data
-```{r MCA}
-#install.packages("FactoMineR")
-library(ggplot2)
-library(FactoMineR)
+Tea data 
+```{r}
 tea <- read.csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/tea.csv", stringsAsFactors = TRUE)
-
-keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
-tea_time <- select(tea, keep_columns)
-
+keep1 <- c("Tea", "How", "how", "sugar", "where", "lunch")
+tea_time <- select(tea, one_of(keep1))
 #pivot_longer(tea_time, cols = everything()) %>% ggplot(aes(value)) + facet_wrap("name", scales = "free")
 mca <- MCA(tea_time, graph = FALSE)
+summary(mca)
 plot(mca, invisible=c("ind"),habillage = "quali")
 ```
 MCA
