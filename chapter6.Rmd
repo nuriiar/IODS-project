@@ -1,0 +1,107 @@
+---
+title: "chapter6"
+author: "nuriiar"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+##assignment 6 lognitudinal data##
+
+```{r, echo=FALSE}
+
+#Libraries and data load
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+BPRS <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/BPRS.txt", sep  =" ", header = T)
+BPRS$treatment <- factor(BPRS$treatment)
+BPRS$subject <- factor(BPRS$subject)
+BPRSL <-  pivot_longer(BPRS, cols=-c(treatment,subject),names_to = "weeks",values_to = "bprs") %>% arrange(weeks)
+BPRSL <-  BPRSL %>% mutate(week = as.integer(substr(weeks,5,5)))
+
+```
+
+```{r}
+# Standardise the variable bprs
+BPRSL <- BPRSL %>%
+  group_by(week) %>%
+  mutate(stdbprs = (bprs - mean(bprs)) / sd(bprs)) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(BPRSL)
+
+# Plot again  the standardised bprs
+library(ggplot2)
+ggplot(BPRSL, aes(x = week, y = stdbprs, linetype = subject)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ treatment, labeller = label_both) +
+  scale_y_continuous(name = "standardized bprs")
+```
+
+```{r}
+n <- 20
+BPRSS <- BPRSL %>%
+  group_by(treatment, week) %>%
+  summarise( mean = mean(bprs), se = sd(bprs)/sqrt(n) ) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(BPRSS)
+
+# Plot the mean profiles
+
+library(ggplot2)
+ggplot(BPRSS, aes(x = week, y = mean, linetype = treatment, shape = treatment)) +
+  geom_line() +
+  scale_linetype_manual(values = c(1,2)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1,2)) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se, linetype="1"), width=0.3) +
+  theme(legend.position = c(0.8,0.8)) +
+  scale_y_continuous(name = "mean(bprs) +/- se(bprs)")
+```
+
+```{r}
+#finding aand filtering outliers
+# Create a summary data by treatment and subject with mean as the summary variable (ignoring baseline week 0)
+BPRSL8S <- BPRSL %>%
+  filter(week > 0) %>%
+  group_by(treatment, subject) %>%
+  summarise( mean=mean(bprs) ) %>%
+  ungroup()
+
+#
+ggplot(BPRSL8S, aes(x = treatment, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(bprs), weeks 1-8")
+
+# Create a new data by filtering the outlier and adjust the ggplot code the draw the plot again with the new data
+BPRSL8S1 <- filter(BPRSL8S, mean < 60)
+
+library(ggplot2)
+ggplot(BPRSL8S1, aes(x = treatment, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(bprs), weeks 1-8")
+
+#filtering out outliers
+BPRSL8S1 <- BPRSL8S %>%
+  filter(mean < 60)
+```
+
+```{r}
+
+BPRSL8S2 <- BPRSL8S %>%
+  mutate(baseline = BPRS$week0)
+
+# Fit the linear model with the mean as the response 
+fit <- lm(mean ~ baseline + treatment, data = BPRSL8S2)
+summary(fit)
+# Compute the analysis of variance table for the fitted model with anova()
+anova(fit)
+```
+
